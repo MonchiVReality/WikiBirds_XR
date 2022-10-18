@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlacementGenerator : MonoBehaviour
 {
-    [SerializeField] GameObject prefab;
+    [SerializeField] GameObject[] prefab;
     [Header("Raycast Settings")]
     [SerializeField] int density;
     [Space]
@@ -20,34 +20,48 @@ public class PlacementGenerator : MonoBehaviour
     [SerializeField] Vector3 minScale;
     [SerializeField] Vector3 maxScale;
 
+
+    public void Awake()
+    {
+        Generate();
+    }
+
     public void Update()
     {
-        if (Input.anyKeyDown)
-        {
-            Generate();
-        }
+        //if (Input.anyKeyDown)
+        //{
+        //    Generate();
+        //}
     }
 
 #if UNITY_EDITOR
     public void Generate()
     {
+
         for (int i = 0; i < density; ++i)
         {
-            float sampleX = Random.Range(xRange.x, xRange.y);
-            float sampleY = Random.Range(zRange.x, zRange.y);
-            Vector3 rayStart = new Vector3(sampleX, maxHeight, sampleY);
+            for (int w = 0; w < prefab.Length; ++w)
+            {
+                float sampleX = Random.Range(xRange.x, xRange.y);
+                float sampleY = Random.Range(zRange.x, zRange.y);
+                Vector3 rayStart = new Vector3(sampleX, maxHeight, sampleY);
 
-            if (!Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, Mathf.Infinity))
-                continue;
+                if (!Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, Mathf.Infinity))
+                    continue;
 
-            if (hit.point.y < minHeight)
-                continue;
+                int waterLayer = LayerMask.NameToLayer("Water");
+                if (hit.transform.gameObject.layer == waterLayer)
+                    continue;
 
-            GameObject instantiatedPrefab = (GameObject)PrefabUtility.InstantiatePrefab(this.prefab, transform);
-            instantiatedPrefab.transform.position = hit.point;
-            instantiatedPrefab.transform.Rotate(Vector3.up, Random.Range(rotationRange.x, rotationRange.y), Space.Self);
-            instantiatedPrefab.transform.rotation = Quaternion.Lerp(transform.rotation, transform.rotation * Quaternion.FromToRotation(instantiatedPrefab.transform.up, hit.normal), rotateTowardsNormal);
-            instantiatedPrefab.transform.localScale = new Vector3(Random.Range(minScale.x, maxScale.x), Random.Range(minScale.y, maxScale.y), Random.Range(minScale.z, maxScale.z));
+                if (hit.point.y < minHeight)
+                    continue;
+
+                GameObject instantiatedPrefab = (GameObject)PrefabUtility.InstantiatePrefab(this.prefab[w], transform);
+                instantiatedPrefab.transform.position = hit.point;
+                instantiatedPrefab.transform.Rotate(Vector3.up, Random.Range(rotationRange.x, rotationRange.y) * 10, Space.Self);
+                //instantiatedPrefab.transform.rotation = Quaternion.Lerp(transform.rotation, transform.rotation * Quaternion.FromToRotation(instantiatedPrefab.transform.up, hit.normal), rotateTowardsNormal);
+                instantiatedPrefab.transform.localScale = new Vector3(Random.Range(minScale.x, maxScale.x), Random.Range(minScale.y, maxScale.y), Random.Range(minScale.z, maxScale.z));
+            }
         }
     }
 
