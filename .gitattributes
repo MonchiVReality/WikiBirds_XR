@@ -1,3 +1,4 @@
 # XR Interaction Toolkit
 lld filter=lfs diff=lfs merge=lfs -text
 94344403fca54c56dd59cb233fefcdab filter=lfs diff=lfs merge=lfs -text
+ArtifactDB filter=lfs diff=lfs merge=lfs -text
