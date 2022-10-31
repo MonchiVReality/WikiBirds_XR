@@ -36,6 +36,8 @@ public class takePhotograph : MonoBehaviour
     {
         XRGrabInteractable grabbable = GetComponent<XRGrabInteractable>();
         grabbable.activated.AddListener(TakePhoto);
+        //grabbable.activated.AddListener(TakePhoto);
+
     }
 
     //private void Update()
@@ -103,5 +105,19 @@ public class takePhotograph : MonoBehaviour
         viewingPhoto = false;
         //photoFrame.SetActive(false);
         //photoDisplayArea.SetActive(false);
+    }
+
+    public void Zoom(ActivateEventArgs arg)
+    {
+        Vector3 rayStart = new Vector3(camera_.transform.position.x, camera_.transform.position.y, camera_.transform.position.z);
+        RaycastHit hit;
+        //if (!Physics.Raycast(rayStart, Vector3.forward, out hit))
+        //{
+        //instantiatedPrefab.transform.Rotate(Vector3.up, Random.Range(rotationRange.x, rotationRange.y) * 10, Space.Self);
+        if (camera_.fieldOfView > 10 && camera_.fieldOfView < 150)
+        {
+            camera_.fieldOfView -= 5;
+        }
+        //}
     }
 }

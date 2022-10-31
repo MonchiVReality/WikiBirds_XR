@@ -8,6 +8,10 @@ TagManager:
   - Right Hand
   - Pistol
   - Photo
+  - lb_perchTarget
+  - lb_groundTarget
+  - lb_bird
+  - Camera
   layers:
   - Default
   - TransparentFX
